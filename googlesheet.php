@@ -1,11 +1,12 @@
 <?php
 session_start();
+include_once('database.php');
 //echo $_SESSION['permissao'];
 
 if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
     session_destroy();
     header("Location: index.php");
-} else {
+} 
 $logado = $_SESSION['email'];
 $id_usuario = $_SESSION['id_user'];
 $nomeUsuario = $_SESSION['nome'];
@@ -14,60 +15,20 @@ $nomeUsuario = $_SESSION['nome'];
 //echo $id_usuario;
 //echo $_SESSION['id_user'];
 
-include_once('database.php');
-ini_set('display_errors', 0 ); error_reporting(0); 
+$dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
-if(isset($_POST['pesquisar']) && (isset($_POST['workspace']))){
 
-$workspace = $_POST['pesquisar'];
-// gettype($workspace);
+if(!empty($dados['enviar'])){
+    //var_dump($dados);
 
-/* if($workspace > 0 && $workspace < 99999999999999){
- echo "sou numero";
-} else {
-    echo "sou Vinicius";
-} */
+    //Receber o arquivo CSV do formulario
 
-if($workspace > 0 && $workspace < 99999999999999){
-    $sql = "SELECT Users_workspace.id_workspace, nome, data_workspace, id_user  from Workspace 
-    left join Users_workspace on Workspace.id_workspace = Users_workspace.id_workspace where id_user = '$id_usuario' and Users_workspace.id_workspace = '$workspace'";
+    $arquivo_csv = $_FILES['arquivo_csv'];
 
-} else{
-    $sql = "SELECT Users_workspace.id_workspace, nome, data_workspace, id_user  from Workspace 
-    left join Users_workspace on Workspace.id_workspace = Users_workspace.id_workspace where id_user = '$id_usuario' and nome like '%$workspace%'";
+    var_dump($arquivo_csv);
 }
 
 
-//echo $sql;
-
-$stmt = sqlsrv_query($conn, $sql);
-
-if($stmt) {
-    $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-}
-
-$relatorio = $row['data_workspace'];
-
-//echo $relatorio;
-
-
-$reportid_old = substr($relatorio, 45, 36);
-
-//echo $reportid_old;
-
-$Auth_old = substr($relatorio, 101, 36);
-
-//echo $Auth_old;
-
-//$reportid = str_replace($reportid_old, '2942f4a5-ed13-4adc-8be1-9833e0e1a0c5', $reportid_old);
-//$Auth = str_replace($Auth_old, '2538e361-50de-4a2c-9d0d-4ef7d77ee3bd', $Auth_old);
-
-$novo_relatorio = "https://app.powerbi.com/reportEmbed?reportId=$reportid_old&autoAuth=true&ctid=$Auth_old";
-
-//echo $novo_relatorio;
-
-} 
-}
 
 ?>
 
@@ -276,11 +237,14 @@ $novo_relatorio = "https://app.powerbi.com/reportEmbed?reportId=$reportid_old&au
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><?php echo $row['nome'];  ?></h1>
-                    </div> <!--Power Bi-->
+                    <h1>Upload CSV</h1>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        <label for="">Arquivo CSV:</label>
 
-                    <iframe title="Google shit de Merda" width="970" height="541.25" src="https://lookerstudio.google.com/embed/reporting/c26b2a8e-96da-49db-9eca-f0cbcb5c207a/page/qf8MD" frameborder="0" allowFullScreen="true"></iframe>
+                        <input type="file" name="arquivo_csv"><br><br>
+
+                        <input type="submit" name="enviar" value="Enviar"><br><br>
+                    </form>
                 </div>
                 <!-- /.container-fluid -->
             </div>
