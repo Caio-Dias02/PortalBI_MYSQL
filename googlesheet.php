@@ -6,7 +6,8 @@ include_once('database.php');
 if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
     session_destroy();
     header("Location: index.php");
-} 
+}
+
 $logado = $_SESSION['email'];
 $id_usuario = $_SESSION['id_user'];
 $nomeUsuario = $_SESSION['nome'];
@@ -17,19 +18,44 @@ $nomeUsuario = $_SESSION['nome'];
 
 $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
-
 if(!empty($dados['enviar'])){
-    //var_dump($dados);
 
     //Receber o arquivo CSV do formulario
 
     $arquivo_csv = $_FILES['arquivo_csv'];
 
-    var_dump($arquivo_csv);
+    //Validar se há arquivo csv 
+
+    if($arquivo_csv['type'] === "text/csv"){
+
+        $arquivo_csv_blob = file_get_contents($arquivo_csv['tmp_name']);
+
+      //  echo $arquivo_csv_blob;
+
+        $userData = array(
+            'arquivo_csv' => $arquivo_csv_blob,
+            'id_user' => $id_usuario
+        );
+
+        $sql = "INSERT INTO planilha(arquivo_csv, id_user) VALUES (?,?)";
+
+        //echo $sql;
+
+        $params = array(
+            &$arquivo_csv_blob,
+            &$id_usuario
+        );
+    
+        $stmt = sqlsrv_query($conn, $sql, $params);
+
+        if( $stmt === false ) {
+            die( print_r( sqlsrv_errors(), true));
+       }        
+
+    } else {
+        echo "<p style='color: f00;'>Erro: Extensão do arquivo inválido. Necessário enviar arquivo CSV!</p> ";
+    }
 }
-
-
-
 ?>
 
 
