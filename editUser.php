@@ -1,63 +1,49 @@
 <?php
-session_start();
 include_once('database.php');
-//echo $_SESSION['permissao'];
+session_start();
+
+//print_r($sql);
+//print_r($stmt);
+
+// Exibe o resultado
 
 if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
     session_destroy();
     header("Location: index.php");
+} else {
+$logado = $_SESSION['email'];
+$id_rls = $_SESSION['id_rls'];
+$nomeUsuario = $_SESSION['nome'];
+$id_usuario =  $_SESSION['id_user'];
+if(!empty($_GET['id'])){
+    $id_user =  $_GET['id'];
+
+    $sql = "SELECT * FROM Users WHERE id_user = '$id_user'";
+
+    //print_r($sql);
+
+    $sqlWorkspace = "SELECT * FROM empresas";
+
+    $stmt = sqlsrv_query($conn, $sql);
+
+    $stmt2 = sqlsrv_query($conn, $sqlWorkspace);
+
+        if($stmt){
+            while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+                $id_user = trim(strip_tags($row['id_user']));
+                $nomeUsers = trim(strip_tags($row['nome_usuario']));
+                $email = trim(strip_tags($row['email']));
+                $cpf = trim(strip_tags($row['cpf']));
+                $senha = trim(strip_tags($row['senha']));
+            }        //print_r($Workspace);
+        } else {
+            header("Location: dashboard.php");
+        }
 }
 
-$logado = $_SESSION['email'];
-$id_usuario = $_SESSION['id_user'];
-$nomeUsuario = $_SESSION['nome'];
 
-//echo $nomeUsuario;
-//echo $id_usuario;
-//echo $_SESSION['id_user'];
-
-$dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
-
-if(!empty($dados['enviar'])){
-
-    //Receber o arquivo CSV do formulario
-
-    $arquivo_csv = $_FILES['arquivo_csv'];
-
-    //Validar se há arquivo csv 
-
-    if($arquivo_csv['type'] === "text/csv"){
-
-        $arquivo_csv_blob = file_get_contents($arquivo_csv['tmp_name']);
-
-      //  echo $arquivo_csv_blob;
-
-        $userData = array(
-            'arquivo_csv' => $arquivo_csv_blob,
-            'id_user' => $id_usuario
-        );
-
-        $sql = "INSERT INTO planilha(arquivo_csv, id_user) VALUES (?,?)";
-
-        //echo $sql;
-
-        $params = array(
-            &$arquivo_csv_blob,
-            &$id_usuario
-        );
-    
-        $stmt = sqlsrv_query($conn, $sql, $params);
-
-        if( $stmt === false ) {
-            die( print_r( sqlsrv_errors(), true));
-       }        
-
-    } else {
-        echo "<p style='color: f00;'>Erro: Extensão do arquivo inválido. Necessário enviar arquivo CSV!</p> ";
-    }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +56,30 @@ if(!empty($dados['enviar'])){
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard</title>
+    <!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+
+    <title>Cadastrar Workspace</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -86,8 +95,19 @@ if(!empty($dados['enviar'])){
             width: 80px;
             height: 80px;
         }
-    </style>
+        .arruma{
+            margin-left:250px;
+            margin-bottom:40px;
+        }
+        @media(min-width: 1240px){
+            .arruma{
+            margin-left:570px;
+            margin-bottom:40px;
+        }
+        }
 
+    
+    </style>
 
 </head>
 
@@ -109,14 +129,13 @@ if(!empty($dados['enviar'])){
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
- 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="dashboard.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
-       
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -124,24 +143,21 @@ if(!empty($dados['enviar'])){
             <div class="sidebar-heading">
                 Interface
             </div>
-            
-
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Workspace</span>
-                </a> 
+                </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                    <?php if($_SESSION['permissao'] == "Admin"){ ?>    <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a>  <?php }?>
+                    <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?>     <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php } ?>
                         <a class="collapse-item" href='relatorioWorkspace.php?id=<?php echo $id_usuario ?>'>Relatório Workspace</a>
                     </div>
                 </div>
-            </li>
-              <!-- Nav Item - Utilities Collapse Menu -->
-              <?php if($_SESSION['permissao'] == "Admin"){ ?> <li class="nav-item">
+                              <!-- Nav Item - Utilities Collapse Menu -->
+              <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?> <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -150,26 +166,15 @@ if(!empty($dados['enviar'])){
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                    <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Usuarios/Workspace</a> 
                        <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
                     </div>
                 </div> <?php }?>
-            </li> 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Google Sheets</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="googlesheet.php">Relatório Google Sheet</a>
-                    </div>
-                </div>
             </li>
-
+    
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-           <br>
+
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
@@ -192,44 +197,10 @@ if(!empty($dados['enviar'])){
                     </button>
 
                     <!-- Topbar Search -->
-                    <form 
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="" method="POST">
-                        <div class="input-group">
-                            <input id="Pesquisar" name="pesquisar" type="text" class="form-control bg-light border-0 small" placeholder="Digita o id ou o nome do Workspace"
-                                aria-label="Search" aria-describedby="basic-addon2" >
-                            <div class="input-group-append"> 
-                            <input onclick="searchData()"  type="submit" name="workspace" value="Pesquisar">
-                            </div>
-                        </div>
-                    </form>
+                    <a href="relatorioUsuarios.php">Voltar</a>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
- 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -261,18 +232,45 @@ if(!empty($dados['enviar'])){
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <h1>Upload CSV</h1>
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        <label for="">Arquivo CSV:</label>
+            <div class="limiter">
+			        <div class="wrap-login100 arruma">
+				        <form action="validaUser.php" method="POST" class="login100-form validate-form">
+                            <span class="login100-form-title p-b-26">
+                                Editar Usuario
+                            </span>
+                            <span class="login100-form-title p-b-48">
+                                <img src="img/solutionsbi.png" alt="" class="imgSolutions">
+                            </span>
+                            <div hidden class="wrap-input100 validate-input">
+                                <input class="input100" type="text" name="id_user" value="<?php echo $id_user; ?>" placeholder="id_user">
+                                <span class="focus-input100" ></span>
+                            </div>
+                            <div class="wrap-input100 validate-input">
+                                <input class="input100" type="text" name="nome" value="<?php echo $nomeUsers; ?>" placeholder="Nome">
+                                <span class="focus-input100" ></span>
+                            </div>
 
-                        <input type="file" name="arquivo_csv"><br><br>
+                            <div class="wrap-input100 validate-input" data-validate = "Valido e-mail é : teste@gmail.com" placeholder="Email">
+                                <input class="input100" type="text" name="email" value="<?php echo $email; ?>">
+                                <span class="focus-input100" ></span>
+                            </div>
 
-                        <input type="submit" name="enviar" value="Enviar"><br><br>
+                            <div class="wrap-input100 validate-input">
+                                <input class="input100" type="text" name="cpf" value="<?php echo $cpf; ?>" placeholder="CPF">
+                                <span class="focus-input100" ></span>
+                            </div> 
+                            <div>
+                            <select name="empresas" class="" aria-label=".form-select-sm example">
+                                <option disabled selected>Empresas</option>
+                                <?php while($row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){ 
+                                echo "<option value='$row2[id_empresa]'>".$row2['nome_empresa']."</option>";
+                                 } ?>
+                            </select>
+                            </div> <br>
+                            <input type="submit" name="editar" value="Editar">
+                            <br><br>
                     </form>
-                </div>
-                <!-- /.container-fluid -->
+
             </div>
             <!-- End of Main Content -->
         </div>
@@ -323,11 +321,5 @@ if(!empty($dados['enviar'])){
     <script src="js/demo/chart-pie-demo.js"></script>
 
 </body>
-<script>
-    var search = document.getElementById('Pesquisar');
-    function searchData()
-    {
-        windows.location = 'dashboard.php?search='+search.value;
-    }
-</script>
+
 </html>

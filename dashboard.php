@@ -7,12 +7,9 @@ if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
     header("Location: index.php");
 } else {
 $logado = $_SESSION['email'];
-$id_usuario = $_SESSION['id_user'];
+$id_rls = $_SESSION['id_rls'];
 $nomeUsuario = $_SESSION['nome'];
-
-//echo $nomeUsuario;
-//echo $id_usuario;
-//echo $_SESSION['id_user'];
+$id_usuario =  $_SESSION['id_user'];
 
 include_once('database.php');
 ini_set('display_errors', 0 ); error_reporting(0); 
@@ -20,13 +17,7 @@ ini_set('display_errors', 0 ); error_reporting(0);
 if(isset($_POST['pesquisar']) && (isset($_POST['workspace']))){
 
 $workspace = $_POST['pesquisar'];
-// gettype($workspace);
 
-/* if($workspace > 0 && $workspace < 99999999999999){
- echo "sou numero";
-} else {
-    echo "sou Vinicius";
-} */
 
 if($workspace > 0 && $workspace < 99999999999999){
     $sql = "SELECT Users_workspace.id_workspace, nome, data_workspace, id_user  from Workspace 
@@ -38,7 +29,6 @@ if($workspace > 0 && $workspace < 99999999999999){
 }
 
 
-//echo $sql;
 
 $stmt = sqlsrv_query($conn, $sql);
 
@@ -48,23 +38,11 @@ if($stmt) {
 
 $relatorio = $row['data_workspace'];
 
-//echo $relatorio;
-
-
 $reportid_old = substr($relatorio, 45, 36);
-
-//echo $reportid_old;
 
 $Auth_old = substr($relatorio, 101, 36);
 
-//echo $Auth_old;
-
-//$reportid = str_replace($reportid_old, '2942f4a5-ed13-4adc-8be1-9833e0e1a0c5', $reportid_old);
-//$Auth = str_replace($Auth_old, '2538e361-50de-4a2c-9d0d-4ef7d77ee3bd', $Auth_old);
-
 $novo_relatorio = "https://app.powerbi.com/reportEmbed?reportId=$reportid_old&autoAuth=true&ctid=$Auth_old";
-
-//echo $novo_relatorio;
 
 } 
 }
@@ -98,6 +76,13 @@ $novo_relatorio = "https://app.powerbi.com/reportEmbed?reportId=$reportid_old&au
         .imgSolutions{
             width: 80px;
             height: 80px;
+        }
+
+        @media(min-width: 1240px){
+            #dashboard{
+                width:1500px;
+                height:700px;
+        }
         }
     </style>
 
@@ -137,7 +122,6 @@ $novo_relatorio = "https://app.powerbi.com/reportEmbed?reportId=$reportid_old&au
             <div class="sidebar-heading">
                 Interface
             </div>
-            
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -148,13 +132,13 @@ $novo_relatorio = "https://app.powerbi.com/reportEmbed?reportId=$reportid_old&au
                 </a> 
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                    <?php if($_SESSION['permissao'] == "Admin"){ ?>    <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a>  <?php }?>
+                    <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?>    <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a>  <?php }?>
                         <a class="collapse-item" href='relatorioWorkspace.php?id=<?php echo $id_usuario ?>'>Relatório Workspace</a>
                     </div>
                 </div>
             </li>
               <!-- Nav Item - Utilities Collapse Menu -->
-              <?php if($_SESSION['permissao'] == "Admin"){ ?> <li class="nav-item">
+              <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?> <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -163,22 +147,13 @@ $novo_relatorio = "https://app.powerbi.com/reportEmbed?reportId=$reportid_old&au
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                       <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
+                       <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Usuarios/Workspace</a> 
+                       <a href="relatorioUsers.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
                     </div>
-                </div> <?php }?>
+                </div> 
+                <?php }?>
             </li> 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Google Sheets</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="googlesheet.php">Relatório Google Sheet</a>
-                    </div>
-                </div>
-            </li>
+
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -280,7 +255,7 @@ $novo_relatorio = "https://app.powerbi.com/reportEmbed?reportId=$reportid_old&au
                         <h1 class="h3 mb-0 text-gray-800"><?php echo $row['nome'];  ?></h1>
                     </div> <!--Power Bi-->
 
-                    <iframe title="<?php echo $row['nome'] ?>" width="970" height="541.25" src="<?php echo $novo_relatorio; ?>" frameborder="0" allowFullScreen="true"></iframe>
+                    <iframe id="dashboard" title="<?php echo $row['nome'] ?>" width="950" height="400" src="<?php echo $novo_relatorio; ?>" frameborder="0" allowFullScreen="true"></iframe>
                 </div>
                 <!-- /.container-fluid -->
             </div>

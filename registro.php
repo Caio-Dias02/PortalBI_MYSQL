@@ -1,6 +1,7 @@
 <?php
-
-
+include_once('database.php');
+$sqlWorkspace = "SELECT * FROM empresas";
+$stmt2 = sqlsrv_query($conn, $sqlWorkspace);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,6 +37,42 @@
             width: 80px;
             height: 80px;
         }
+		
+	#icon{
+		position:absolute;
+		top: 50%;
+		right: 20px;
+		transform: translateY(-50%);
+		background: url('./img/eye.png');
+		background-size: cover;
+		width:20px;
+		height:20px;
+		cursor: pointer;
+	}	
+	#icon.hidden{
+		background: url('./img/hidden.png');
+		background-size: cover;
+	}
+		
+	.button {
+	display: inline-block;
+	padding: .75rem 1.25rem;
+	border-radius: 10rem;
+	color: white;
+	text-transform: uppercase;
+	font-size: 1rem;
+	transition: all .8s;
+	position: relative;
+	overflow: hidden;
+	z-index: 1;
+	background-color: rgb(7, 160, 254);
+
+	&:hover {
+		background-color: rgb(2, 74, 142);
+		cursor:pointer;
+		
+	}
+	}
 </style>
 </head>
 <body>
@@ -51,38 +88,44 @@
 					<img src="img/solutionsbi.png" alt="" class="imgSolutions">
 					</span>
                     <div class="wrap-input100 validate-input">
-						<input class="input100" type="text" name="nome">
-						<span class="focus-input100" data-placeholder="Nome"></span>
+						<input class="input100" type="text" name="nome" placeholder="Nome" required>
+						<span class="" data-placeholder="Nome"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate = "Valido e-mail é : teste@gmail.com">
-						<input class="input100" type="text" name="email">
-						<span class="focus-input100" data-placeholder="Email"></span>
+						<input class="input100" type="email" name="email" placeholder="E-mail" required>
+						<span class="focus-input100"></span>
 					</div>
 
                     <div class="wrap-input100 validate-input">
-						<input class="input100" type="text" name="cpf">
-						<span class="focus-input100" data-placeholder="CPF"></span>
+						<input class="input100" type="text" name="cpf" placeholder="CPF" required>
+						<span class="focus-input100" ></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<span class="btn-show-pass">
-							<i class="zmdi zmdi-eye"></i>
-						</span>
-						<input class="input100" type="password" name="senha">
-						<span class="focus-input100" data-placeholder="Senha"></span>
+					<div id="icon" onclick="showHidden()"></div>
+						<input class="input100" type="password" name="senha" id="password" placeholder="Senha" required>
+						<span class="focus-input100" ></span>
 					</div>
 
 					<div >
-					<select name="permissao" class="" aria-label=".form-select-sm example">
+					<select name="permissao" class="" aria-label=".form-select-sm example" required>
 						<option disabled selected>Permissão</option>
-						<option  value="Admin">Admin</option>
-						<option value="Usuario">Usuario</option>
+						<option value="1">Diretoria</option>
+						<option value="2">Gerencia Buco</option>
+						<option value="3">Gerencia Neural</option>
+						<option value="4">Gerencia Serviços</option>
 					</select>
 					</div> <br>
-
-					
-						<input type="submit" name="registrar" value="Registrar">
+					<div>
+					<select name="empresas" class="" aria-label=".form-select-sm example" required>
+						<option disabled selected>Empresas</option>
+						<?php while($row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){ 
+						echo "<option value='$row2[id_empresa]'>".$row2['nome_empresa']."</option>";
+							} ?>
+					</select>
+					</div> <br>
+						<input class="button" type="submit" name="registrar" value="Registrar">
 						<br><br>
 
 						<span class="txt1">
@@ -92,12 +135,15 @@
 						<a class="txt2" href="index.php">
 							Clique aqui
 						</a>
+						<br><br>
+						<a class="txt2" href="empresas.php">
+							Cadastro de empresas
+						</a>
 					
 				</form>
 			</div>
 		</div>
 	</div>
-	
 
 	<div id="dropDownSelect1"></div>
 	
@@ -117,6 +163,7 @@
 	<script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
+	<script src="script.js"></script>
 
 </body>
 </html>

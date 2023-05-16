@@ -1,3 +1,22 @@
+<?php
+
+include_once('database.php');
+session_start();
+
+if((!isset($_SESSION['senha_rls'])== true) || (!isset($_SESSION['email_rls'])== true)){
+    session_destroy();
+    header("Location: index.php");
+} else {
+$email = $_SESSION['email_rls'];
+$id_rls = $_SESSION['id_rls_rls'];
+}
+
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,8 +51,7 @@
             width: 80px;
             height: 80px;
         }
-
-	#icon{
+		#icon{
 		position:absolute;
 		top: 50%;
 		right: 20px;
@@ -48,9 +66,7 @@
 		background: url('./img/hidden.png');
 		background-size: cover;
 	}
-	
-	
-.button {
+	.button {
   display: inline-block;
   padding: .75rem 1.25rem;
   border-radius: 10rem;
@@ -69,8 +85,6 @@
     
   }
 }
-	
-
 </style>
 </head>
 <body>
@@ -78,26 +92,26 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form" action="validaLogin.php" method="POST">
+				<form class="login100-form validate-form" action="validaEntrada.php" method="POST">
 					<span class="login100-form-title p-b-26">
-						Login RLS
+						Login Usuario
 					</span>
 					<span class="login100-form-title p-b-48">
 					<img src="img/solutionsbi.png" alt="" class="imgSolutions">
 					</span>
 					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-						<input class="input100" type="text" name="email" placeholder="Email" required>
+						<input class="input100" type="text" name="email" required placeholder="Email">
 						<span class="focus-input100" ></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<div id="icon" onclick="showHidden()"></div>
-						<input class="input100" type="password" name="senha" id="password" placeholder="Senha" required>
+					<div id="icon" onclick="showHidden()"></div>
+						<input class="input100" type="password" name="senha" id="password" required placeholder="Senha">
 						<span class="focus-input100" ></span>
 					</div>
 
-					<input class="button" type="submit" name="login" value="Login">
-
+					<input class="btn btn-primary button" type="submit" name="login" value="Login">
+					
 
 					<br><br>
 						<span class="txt1">
@@ -107,6 +121,7 @@
 						<a class="txt2" href="registro.php">
 							Clique aqui
 						</a>
+
 				</form>
 			</div>
 		</div>
@@ -132,6 +147,5 @@
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
 	<script src="script.js"></script>
-
 </body>
 </html>

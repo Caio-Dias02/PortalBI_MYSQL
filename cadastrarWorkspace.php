@@ -1,6 +1,17 @@
 <?php 
 session_start();
+include_once('database.php');
+
+if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
+    session_destroy();
+    header("Location: index.php");
+} 
+//echo $logado;
+$logado = $_SESSION['email'];
+$id_rls = $_SESSION['id_rls'];
+$nomeUsuario = $_SESSION['nome'];
 $id_usuario = $_SESSION['id_user'];
+
 ?>
 
 
@@ -100,12 +111,12 @@ $id_usuario = $_SESSION['id_user'];
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                    <?php if($_SESSION['permissao'] == "Admin"){ ?><a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php } ?>
+                    <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?><a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php } ?>
                         <a class="collapse-item" href='relatorioWorkspace.php?id=<?php echo $id_usuario ?>'>Relatório Workspace</a>
                     </div>
                 </div>
                               <!-- Nav Item - Utilities Collapse Menu -->
-              <?php if($_SESSION['permissao'] == "Admin"){ ?> <li class="nav-item">
+              <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?> <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -114,7 +125,8 @@ $id_usuario = $_SESSION['id_user'];
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                       <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
+                    <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Usuarios/Workspace</a> 
+                       <a href="relatorioUsers.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
                     </div>
                 </div> <?php }?>
             </li>

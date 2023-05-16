@@ -7,10 +7,11 @@ if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
     header("Location: index.php");
 } 
 $logado = $_SESSION['email'];
-//echo $logado;
-$id_usuario = $_SESSION['id_user'];
+$id_rls = $_SESSION['id_rls'];
+$nomeUsuario = $_SESSION['nome'];
+$id_usuario =  $_SESSION['id_user'];
 
-$sql = "SELECT id_relacionamento, Users.id_user, nome_usuario, email, permissao, nome   from Users 
+$sql = "SELECT id_relacionamento, Users.id_user, nome_usuario, email, id_rls, nome from Users 
 left join Users_workspace on Users.id_user = Users_workspace.id_user
 left join Workspace on Users_workspace.id_workspace = Workspace.id_workspace";
 
@@ -73,6 +74,12 @@ $stmt = sqlsrv_query($conn, $sql);
             width: 1000;
             
         }
+
+        .RelatorioWorkspace{
+            text-align:center;
+            
+        }
+
     </style>
 
 
@@ -121,12 +128,12 @@ $stmt = sqlsrv_query($conn, $sql);
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                    <?php if($_SESSION['permissao'] == "Admin"){ ?>  <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php }?>
+                    <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?>  <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php }?>
                         <a class="collapse-item" href='relatorioWorkspace.php?id=<?php echo $id_usuario ?>'>Relatório Workspace</a>
                     </div>
                 </div>
                               <!-- Nav Item - Utilities Collapse Menu -->
-              <?php if($_SESSION['permissao'] == "Admin"){ ?> <li class="nav-item">
+              <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?> <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -135,7 +142,8 @@ $stmt = sqlsrv_query($conn, $sql);
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                       <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
+                       <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Usuarios/Workspace</a> 
+                       <a href="relatorioUsers.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
                     </div>
                 </div> <?php }?>
             </li>
@@ -199,15 +207,14 @@ $stmt = sqlsrv_query($conn, $sql);
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 			    <div class="RelatorioWorkspace">
-					<span class="login100-form-title p-b-26">
-						Relatório Usuarios
+					<span class="login100-form-title p-b-30">
+						Relatório Usuarios/Workspace
 					</span>
                     <table class="table table-striped table-hover ">
                         <thead>
                             <tr>
                                 <th scope="col">Nome</th>
                                 <th scope="col">E-mail</th>
-                                <th scope="col">Permissão</th>
                                 <th scope="col">Workspace</th>
                             </tr>
                         </thead>
@@ -217,9 +224,8 @@ $stmt = sqlsrv_query($conn, $sql);
                                     echo "<tr>";
                                     echo "<td>".$row['nome_usuario']."</td>";
                                     echo "<td>".$row['email']."</td>";
-                                    echo "<td>".$row['permissao']."</td>";
                                     echo "<td>".$row['nome']."</td>";
-                                    if($_SESSION['permissao'] == "Admin"){   echo "<td>
+                                    if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){echo "<td>
                                         <a classe ='btn btn-sm btn-primary' href='editUsuario.php?id=$row[id_user]'>
                                         <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-pencil-square' viewBox='0 0 16 16'>
                                         <path d='M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z'/>

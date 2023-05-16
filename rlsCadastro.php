@@ -1,3 +1,7 @@
+<?php
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,45 +36,25 @@
             width: 80px;
             height: 80px;
         }
+		.button {
+	display: inline-block;
+	padding: .75rem 1.25rem;
+	border-radius: 10rem;
+	color: white;
+	text-transform: uppercase;
+	font-size: 1rem;
+	transition: all .8s;
+	position: relative;
+	overflow: hidden;
+	z-index: 1;
+	background-color: rgb(7, 160, 254);
 
-	#icon{
-		position:absolute;
-		top: 50%;
-		right: 20px;
-		transform: translateY(-50%);
-		background: url('./img/eye.png');
-		background-size: cover;
-		width:20px;
-		height:20px;
-		cursor: pointer;
-	}	
-	#icon.hidden{
-		background: url('./img/hidden.png');
-		background-size: cover;
+	&:hover {
+		background-color: rgb(2, 74, 142);
+		cursor:pointer;
+		
 	}
-	
-	
-.button {
-  display: inline-block;
-  padding: .75rem 1.25rem;
-  border-radius: 10rem;
-  color: white;
-  text-transform: uppercase;
-  font-size: 1rem;
-  transition: all .8s;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  background-color: rgb(7, 160, 254);
-
-  &:hover {
-    background-color: rgb(2, 74, 142);
-	cursor:pointer;
-    
-  }
-}
-	
-
+	}
 </style>
 </head>
 <body>
@@ -78,35 +62,40 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form" action="validaLogin.php" method="POST">
+				<form action="validaRls.php" method="POST" class="login100-form validate-form">
 					<span class="login100-form-title p-b-26">
-						Login RLS
+						Cadastro RLS
 					</span>
 					<span class="login100-form-title p-b-48">
 					<img src="img/solutionsbi.png" alt="" class="imgSolutions">
 					</span>
-					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-						<input class="input100" type="text" name="email" placeholder="Email" required>
+					<div class="wrap-input100 validate-input" data-validate = "Valido e-mail é : teste@gmail.com" >
+						<input class="input100" type="text" name="email" placeholder="Email">
+						<span class="focus-input100" ></span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate="Enter password" >
+						<span class="btn-show-pass">
+							<i class="zmdi zmdi-eye"></i>
+						</span>
+						<input class="input100" type="password" name="senha" placeholder="Senha">
 						<span class="focus-input100" ></span>
 					</div>
 
-					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<div id="icon" onclick="showHidden()"></div>
-						<input class="input100" type="password" name="senha" id="password" placeholder="Senha" required>
-						<span class="focus-input100" ></span>
-					</div>
+						<input class="button" type="submit" name="registrar" value="Registrar">
+						<br><br>
 
-					<input class="button" type="submit" name="login" value="Login">
-
-
-					<br><br>
 						<span class="txt1">
-							Ainda não é cadastrado?
+							É cadastrado?
 						</span>
 
-						<a class="txt2" href="registro.php">
+						<a class="txt2" href="index.php">
 							Clique aqui
 						</a>
+						<br><br>
+						<a class="txt2" href="empresas.php">
+							Cadastro de empresas
+						</a>
+					
 				</form>
 			</div>
 		</div>
@@ -131,7 +120,6 @@
 	<script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
-	<script src="script.js"></script>
 
 </body>
 </html>

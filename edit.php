@@ -11,8 +11,11 @@ if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
     session_destroy();
     header("Location: index.php");
 } 
+//echo $logado;
 $logado = $_SESSION['email'];
-$id_usuario = $_GET['id'];
+$id_rls = $_SESSION['id_rls'];
+$nomeUsuario = $_SESSION['nome'];
+$id_usuario = $_SESSION['id_user'];
 
 
 if(!empty($_GET['id'])){
@@ -134,12 +137,12 @@ if(!empty($_GET['id'])){
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                    <?php if($_SESSION['permissao'] == "Admin"){ ?>     <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php } ?>
+                    <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?>     <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php } ?>
                         <a class="collapse-item" href='relatorioWorkspace.php?id=<?php echo $id_usuario ?>'>Relatório Workspace</a>
                     </div>
                 </div>
                              <!-- Nav Item - Utilities Collapse Menu -->
-              <?php if($_SESSION['permissao'] == "Admin"){ ?> <li class="nav-item">
+              <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?> <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -148,6 +151,7 @@ if(!empty($_GET['id'])){
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                        <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Usuarios/Workspace</a>    
                        <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
                     </div>
                 </div> <?php }?>
@@ -230,13 +234,13 @@ if(!empty($_GET['id'])){
 						<span class="focus-input100" data-placeholder="Id Workspace"></span>
 					</div>
 					<div class="wrap-input100 validate-input">
-						<input class="input100" type="text" name="nomeWorkspace" value="<?php echo $nomeWorkspace; ?>">
-						<span class="focus-input100" data-placeholder="Nome do Workspace"></span>
+						<input class="input100" type="text" name="nomeWorkspace" value="<?php echo $nomeWorkspace; ?>" placeholder="Nome do Workspace">
+						<span class="focus-input100" ></span>
 					</div>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" type="text" name="Workspace" value="<?php echo $Workspace; ?>">
-						<span class="focus-input100" data-placeholder="Link do Workspace"></span>
+						<input class="input100" type="text" name="Workspace" value="<?php echo $Workspace; ?>" placeholder="Link do Workspace">
+						<span class="focus-input100" ></span>
 					</div>
 
 					<input type="submit" name="editar" value="Editar">

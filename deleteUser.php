@@ -13,14 +13,14 @@ if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
 } 
 $logado = $_SESSION['email'];
 
-if(!empty($_GET['id_relacionamento'])){
-    $id_relacionamento =  $_GET['id_relacionamento'];
+if(!empty($_GET['id_usuario'])){
+    $id_usuario =  $_GET['id_usuario'];
 
-    $sql = "DELETE FROM Users_workspace WHERE id_relacionamento = '$id_relacionamento'";
+    $sql = "DELETE FROM Users WHERE id_user = '$id_usuario'";
     
    // print_r($sql);
 
     $stmt = sqlsrv_query($conn, $sql);
 
-    header("Location: relatorioUsuarios.php");
-} header("Location: dashboard.php");
+    header("Location: relatorioUsers.php");
+} header("Location: relatorioUsers.php");

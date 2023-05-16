@@ -6,15 +6,16 @@ if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
     session_destroy();
     header("Location: index.php");
 } 
-
-$logado = $_SESSION['email'];
 //echo $logado;
+$logado = $_SESSION['email'];
+$id_rls = $_SESSION['id_rls'];
+$nomeUsuario = $_SESSION['nome'];
 
 
-$id_usuario = $_GET['id'];
+$id_usuario = $_SESSION['id_user'];
 
 
-$sql = "SELECT Workspace.id_workspace, Users.id_user ,id_relacionamento, nome_usuario, email, permissao,    nome , data_workspace from Users 
+$sql = "SELECT Workspace.id_workspace, Users.id_user ,id_relacionamento, nome_usuario, email, nome , data_workspace from Users 
                                 left join Users_workspace on Users.id_user = Users_workspace.id_user
                                 left join Workspace on Users_workspace.id_workspace = Workspace.id_workspace WHERE Users.id_user = $id_usuario";
 
@@ -129,12 +130,12 @@ if ($stmt === false) {
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                    <?php if($_SESSION['permissao'] == "Admin"){ ?>  <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php }?>
+                    <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?>  <a class="collapse-item" href="cadastrarWorkspace.php">Cadastrar Workspace</a> <?php }?>
                         <a class="collapse-item" href='relatorioWorkspace.php?id=<?php echo $id_usuario ?>'>Relatório Workspace</a>
                     </div>
                 </div>
                               <!-- Nav Item - Utilities Collapse Menu -->
-              <?php if($_SESSION['permissao'] == "Admin"){ ?> <li class="nav-item">
+              <?php if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4){ ?> <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -143,9 +144,10 @@ if ($stmt === false) {
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                       <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
+                       <a href="relatorioUsuarios.php" class="collapse-item" href="utilities-color.html">Usuarios/Workspace</a> 
+                       <a href="relatorioUsers.php" class="collapse-item" href="utilities-color.html">Relatório de Usuarios</a> 
                     </div>
-                </div> <?php }?>
+                </div>  <?php }?>
             </li>
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -227,7 +229,7 @@ if ($stmt === false) {
                                     echo "<td>".$row['id_workspace']."</td>";
                                     echo "<td>".$row['nome']."</td>";
                                     echo "<td>".$row['data_workspace']."</td>";
-                                    if($_SESSION['permissao'] == "Admin" && !empty($row['id_workspace'])){   echo "<td>
+                                    if($id_rls == 1 || $id_rls == 2 || $id_rls == 3 || $id_rls == 4 && !empty($row['id_workspace'])){   echo "<td>
                                         <a classe ='btn btn-sm btn-primary' href='edit.php?id=$row[id_workspace]'>
                                         <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-pencil-square' viewBox='0 0 16 16'>
                                         <path d='M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z'/>

@@ -3,7 +3,7 @@
 $serverName = "BR3250703W4\\SQLEXPRESS2014";
 
 $connectionOps = array(
-        "Database" => "portalbi",
+        "Database" => "portalweb",
         "UID" => "",
         "PWD" => ""
 );
