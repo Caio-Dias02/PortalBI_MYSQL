@@ -3,6 +3,7 @@ include_once('database.php');
 $sqlWorkspace = "SELECT * FROM empresas";
 $stmt2 = sqlsrv_query($conn, $sqlWorkspace);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
