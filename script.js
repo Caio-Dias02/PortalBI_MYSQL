@@ -10,3 +10,4 @@ function showHidden(){
         icon.classList.remove('hidden')
     }
 }
+

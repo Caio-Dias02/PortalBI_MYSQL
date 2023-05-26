@@ -1,11 +1,11 @@
 <?php
 
-$serverName = "BR3250703W4\\SQLEXPRESS2014";
+$serverName = "leonardo2209202332.bateaquihost.com.br";
 
 $connectionOps = array(
-        "Database" => "portalweb",
-        "UID" => "",
-        "PWD" => ""
+        "Database" => "leonardo2209202332_caio",
+        "UID" => "leonardo2209202332_caio",
+        "PWD" => "caio@2023"
 );
 $conn = sqlsrv_connect($serverName, $connectionOps);
 
