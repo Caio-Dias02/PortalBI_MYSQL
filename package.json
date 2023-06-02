@@ -1,9 +1,14 @@
 {
   "name": "portalbi_nilson",
   "version": "1.0.0",
+  "homepage": "https://Caio-Dias02.github.io/PortalBI",
   "main": "script.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
+  },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
