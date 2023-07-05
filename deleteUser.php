@@ -20,7 +20,8 @@ if(!empty($_GET['id_usuario'])){
     
    // print_r($sql);
 
-    $stmt = sqlsrv_query($conn, $sql);
+    $stmt =  $mysqli->query($sql);
 
     header("Location: relatorioUsers.php");
+    
 } header("Location: relatorioUsers.php");

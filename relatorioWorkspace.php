@@ -19,9 +19,9 @@ $sql = "SELECT Workspace.id_workspace, Users.id_user ,id_relacionamento, nome_us
                                 left join Users_workspace on Users.id_user = Users_workspace.id_user
                                 left join Workspace on Users_workspace.id_workspace = Workspace.id_workspace WHERE Users.id_user = $id_usuario";
 
-$stmt  = sqlsrv_query($conn, $sql);
+$result = $mysqli->query($sql);
 
-if ($stmt === false) {
+if ($result === false) {
     // Handle error here, e.g. log error message or display to user
     die(print_r(sqlsrv_errors(), true)); // Display error information
 }
@@ -225,7 +225,7 @@ if ($stmt === false) {
                         </thead>
                         <tbody>
                             <?php 
-                                while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+                                while($row = mysqli_fetch_assoc($result)){
                                     echo "<tr>";
                                     echo "<td>".$row['id_workspace']."</td>";
                                     echo "<td>".$row['nome']."</td>";

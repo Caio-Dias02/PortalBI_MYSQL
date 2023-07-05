@@ -14,22 +14,10 @@ if(isset($_POST['registrar']) && isset($_POST['email'])  && isset($_POST['senha'
 
     $senha = password_hash($senha_old, PASSWORD_BCRYPT, $options);
 
-    $userData = array(
-        'email' => $email,
-        'senha' => $senha,
-    );
 
-    $sql = "INSERT INTO rls(email, senha) VALUES (?,?)";
+    $sqli = mysqli_query($mysqli, "INSERT INTO rls(email, senha) VALUES('$email', '$senha')");
 
-    $params = array(
-        &$email,
-        &$senha
-    );
 
-    $stmt = sqlsrv_query($conn, $sql, $params);
-
-    print_r($stmt);
-    
 if( $stmt === false ) {
      die( print_r( sqlsrv_errors(), true));
 }

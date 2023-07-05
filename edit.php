@@ -23,10 +23,10 @@ if(!empty($_GET['id'])){
 
     $sql = "SELECT * FROM Workspace WHERE id_workspace = '$id_workspace'";
 
-    $stmt = sqlsrv_query($conn, $sql);
+    $stmt = $mysqli->query($sql);
 
         if($stmt){
-            while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+            while($row = mysqli_fetch_assoc($stmt)){
                 $id_workspace = trim(strip_tags($row['id_workspace']));
                 $nomeWorkspace = trim(strip_tags($row['nome']));
                 $Workspace = trim(strip_tags($row['data_workspace']));

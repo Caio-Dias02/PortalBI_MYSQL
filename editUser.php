@@ -24,12 +24,12 @@ if(!empty($_GET['id'])){
 
     $sqlWorkspace = "SELECT * FROM empresas";
 
-    $stmt = sqlsrv_query($conn, $sql);
+    $stmt =  $mysqli->query($sql);
 
-    $stmt2 = sqlsrv_query($conn, $sqlWorkspace);
+    $stmt2 = $mysqli->query($sqlWorkspace);
 
         if($stmt){
-            while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+            while($row = mysqli_fetch_assoc($stmt)){
                 $id_user = trim(strip_tags($row['id_user']));
                 $nomeUsers = trim(strip_tags($row['nome_usuario']));
                 $email = trim(strip_tags($row['email']));
@@ -262,7 +262,7 @@ if(!empty($_GET['id'])){
                             <div>
                             <select name="empresas" class="" aria-label=".form-select-sm example">
                                 <option disabled selected>Empresas</option>
-                                <?php while($row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){ 
+                                <?php while($row2 = mysqli_fetch_assoc($stmt2)){ 
                                 echo "<option value='$row2[id_empresa]'>".$row2['nome_empresa']."</option>";
                                  } ?>
                             </select>

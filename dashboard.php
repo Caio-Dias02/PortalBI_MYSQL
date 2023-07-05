@@ -8,8 +8,14 @@ if((!isset($_SESSION['senha'])== true) || (!isset($_SESSION['email'])== true)){
 } else {
 $logado = $_SESSION['email'];
 $id_rls = $_SESSION['id_rls'];
+$senha = $_SESSION['senha'];
 $nomeUsuario = $_SESSION['nome'];
 $id_usuario =  $_SESSION['id_user'];
+
+//echo $logado;
+//echo $id_rls;
+//echo $nomeUsuario;
+//echo $id_usuario;
 
 include_once('database.php');
 ini_set('display_errors', 0 ); error_reporting(0); 
@@ -30,10 +36,10 @@ if($workspace > 0 && $workspace < 99999999999999){
 
 
 
-$stmt = sqlsrv_query($conn, $sql);
+$stmt =  $mysqli->query($sql);
 
 if($stmt) {
-    $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+    $row = mysqli_fetch_assoc($stmt);
 }
 
 $relatorio = $row['data_workspace'];

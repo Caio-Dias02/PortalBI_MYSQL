@@ -16,15 +16,15 @@ if(isset($_POST['login']) && isset($_POST['email']) && isset($_POST['senha'])){
    // echo $sql;
 	
 	
-	$stmt = sqlsrv_query($conn, $sql);
+   $result = $mysqli->query($sql);
 	
 	//print_r($sql);
 	//print_r($stmt);
 	
 	// Exibe o resultado
 	
-	if($stmt) {
-		$row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+	if($result) {
+		$row = mysqli_fetch_assoc($result);
 		if(password_verify($senha, $row['senha'])){
 			$_SESSION['id_rls'] = $row['rls'];
 			$_SESSION['email'] = $row['email'];

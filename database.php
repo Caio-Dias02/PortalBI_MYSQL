@@ -1,18 +1,23 @@
 <?php
 
-$serverName = "leonardo2209202332.bateaquihost.com.br";
+$host = "localhost";
+$user = "root";
+$senha = "";
+$database = "portalweb";
 
-$connectionOps = array(
-        "Database" => "leonardo2209202332_caio",
-        "UID" => "leonardo2209202332_caio",
-        "PWD" => "caio@2023"
-);
-$conn = sqlsrv_connect($serverName, $connectionOps);
+$mysqli = new mysqli($host, $user, $senha, $database);
+
+define("DB_SERVER", "localhost");
+define("DB_USER", "root");
+define("DB_PASSWORD", "");
+define("DB_DATABASE", "portalweb");
+
+$connect = mysqli_connect(DB_SERVER , DB_USER, DB_PASSWORD, DB_DATABASE);
 
 
-if($conn == false){
-    echo "Connection não estabelecida.<br />";
-    die(print_r(sqlserv_errors(), true));
-}
+if($mysqli->connect_errno){
 
-//$UserName = "SA\MZ128YD";
+    echo "Erro";
+} 
+
+?>

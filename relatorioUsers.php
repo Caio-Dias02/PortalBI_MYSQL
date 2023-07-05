@@ -15,7 +15,7 @@ $sql = "SELECT Users.id_user, nome_usuario, rls.email, USers.email as email_usua
 left join empresas on Users.id_empresa = empresas.id_empresa
 left join rls on Users.id_rls = rls.id_rls";
 
-$stmt = sqlsrv_query($conn, $sql);
+$stmt = $mysqli->query($sql);
 //die (print_r(sqlsrv_errors()));
 }
 ?>
@@ -227,7 +227,7 @@ $stmt = sqlsrv_query($conn, $sql);
                         </thead>
                         <tbody>
                             <?php 
-                                while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+                                while($row = mysqli_fetch_assoc($stmt)){
                                     echo "<tr>";
                                     echo "<td>".$row['nome_usuario']."</td>";
                                     echo "<td>".$row['email_usuario']."</td>";

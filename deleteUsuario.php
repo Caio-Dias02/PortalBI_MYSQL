@@ -20,7 +20,7 @@ if(!empty($_GET['id_relacionamento'])){
     
    // print_r($sql);
 
-    $stmt = sqlsrv_query($conn, $sql);
+    $stmt =  $mysqli->query($sql);
 
     header("Location: relatorioUsuarios.php");
 } header("Location: dashboard.php");

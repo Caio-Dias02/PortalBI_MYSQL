@@ -24,7 +24,6 @@ if(isset($_POST['registrar']) && isset($_POST['nome']) && isset($_POST['email'])
     $permissao = trim(strip_tags($_POST['permissao']));
     $empresas = trim(strip_tags($_POST['empresas']));
 
-
     //Valida CPF
 
         // Extrai somente os números
@@ -56,34 +55,11 @@ if(isset($_POST['registrar']) && isset($_POST['nome']) && isset($_POST['email'])
         ];
 
     $senha = password_hash($senha_old, PASSWORD_BCRYPT, $options);
-
-    $userData = array(
-        'nome_usuario' => $nome,
-        'email' => $email,
-        'cpf' => $cpf,
-        'senha' => $senha,
-        'id_rls' => $permissao,
-        'empresas' => $empresas
-    );
-
-    $sql = "INSERT INTO Users(nome_usuario, email, cpf, senha, id_rls, id_empresa) VALUES (?,?,?,?,?,?)";
-
-    $params = array(
-        &$nome,
-        &$email,
-        &$cpf,
-        &$senha,
-        &$permissao,
-        &$empresas
-    );
-
-    $stmt = sqlsrv_query($conn, $sql, $params);
     
-    if( $stmt === false ) {
-        die( print_r( sqlsrv_errors(), true));
-    }
-    
+    $sqli = mysqli_query($mysqli, "INSERT INTO Users(nome_usuario, email,  cpf, senha, id_empresa, id_rls) VALUES('$nome', '$email', '$cpf', '$senha', '$empresas','$permissao')");
+
 header("Location: index.php");
+
 } else {
     header("Location: registro.php");
 }

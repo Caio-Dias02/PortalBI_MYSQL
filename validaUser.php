@@ -43,7 +43,7 @@ if(isset($_POST['editar']) && isset($_POST['nome']) && isset($_POST['email']) &&
 
     $sql = "UPDATE Users SET nome_usuario = '$nome', email = '$email', cpf = '$cpf', id_empresa = $id_empresa WHERE id_user = '$id_user'";
 
-    $stmt = sqlsrv_query($conn, $sql);
+    $stmt = $mysqli->query($sql);
 
      header("Location: relatorioUsers.php");
 }

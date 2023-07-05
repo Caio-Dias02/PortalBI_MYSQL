@@ -1,7 +1,7 @@
 <?php
 include_once('database.php');
 $sqlWorkspace = "SELECT * FROM empresas";
-$stmt2 = sqlsrv_query($conn, $sqlWorkspace);
+$result = $mysqli->query($sqlWorkspace);
 ?>
 
 <!DOCTYPE html>
@@ -122,8 +122,8 @@ $stmt2 = sqlsrv_query($conn, $sqlWorkspace);
 					<div>
 					<select name="empresas" class="" aria-label=".form-select-sm example" required>
 						<option disabled selected>Empresas</option>
-						<?php while($row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){ 
-						echo "<option value='$row2[id_empresa]'>".$row2['nome_empresa']."</option>";
+						<?php while ($rows = mysqli_fetch_assoc($result)){
+						echo "<option value='$rows[id_empresa]'>".$rows['nome_empresa']."</option>";
 							} ?>
 					</select>
 					</div> <br>

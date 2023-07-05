@@ -33,23 +33,13 @@ if(isset($_POST['editar']) && isset($_POST['nome']) && isset($_POST['email']) &&
     $id_user = $_POST['id_user'];
 
 
-    $userWorkspace= array(
-        'id_user' => $id_user,
-        'id_workspace' => $id_workspace,
-    );
-
     $sql = "UPDATE Users SET nome_usuario = '$nome', email = '$email', cpf = '$cpf' WHERE id_user = '$id_user'";
 
-    $sqlWorkspace =  "INSERT INTO Users_workspace(id_user, id_workspace) VALUES (?,?)";
+    $sqlWorkspace =  "INSERT INTO Users_workspace(id_user, id_workspace) VALUES ('$id_user', '$id_workspace')";
 
-    $params = array(
-        &$id_user,
-        &$id_workspace
-    );
+    $stmt =  $mysqli->query($sql);;
 
-    $stmt = sqlsrv_query($conn, $sql);
-
-    $stmt2 = sqlsrv_query($conn, $sqlWorkspace, $params);
+    $stmt2 = $result = $mysqli->query($sqlWorkspace);;
 
     //print_r($stmt);
    // print_r($stmt2);

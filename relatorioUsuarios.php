@@ -15,7 +15,7 @@ $sql = "SELECT id_relacionamento, Users.id_user, nome_usuario, email, id_rls, no
 left join Users_workspace on Users.id_user = Users_workspace.id_user
 left join Workspace on Users_workspace.id_workspace = Workspace.id_workspace";
 
-$stmt = sqlsrv_query($conn, $sql);
+$result = $mysqli->query($sql);
 
 
 ?>
@@ -221,7 +221,7 @@ $stmt = sqlsrv_query($conn, $sql);
                         </thead>
                         <tbody>
                             <?php 
-                                while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+                                while($row = mysqli_fetch_assoc($result)){
                                     echo "<tr>";
                                     echo "<td>".$row['nome_usuario']."</td>";
                                     echo "<td>".$row['email']."</td>";
